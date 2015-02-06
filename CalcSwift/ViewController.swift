@@ -37,6 +37,14 @@ class ViewController: UIViewController {
    // var operandStack:Array<Double> = Array<Double>() //Initializing with an empty array with no arguments. Every property MUST be initialized.
     var operandStack = Array<Double>()//inferred.
     
+    
+    
+   
+    
+    
+    
+    //This is tjhe controller of the MVC
+    
     @IBAction func operate(sender: UIButton) {
        
         
@@ -49,26 +57,39 @@ class ViewController: UIViewController {
             
         }
         
-        
-        
-    //We are going to switch on the operation string
+            //We are going to switch on the operation string
         switch operation{
             //multiply the last 2 things on the stack
-            case "×":
-                if operandStack.count >= 2{
-            displayValue = operandStack.removeLast() * operandStack.removeLast()
-                    enter() //Automatic enter here too
-            }
+        case "×": performOperation{ $0 - $1 }
+        case "÷": performOperation{ $1 / $0 }
+        case "+": performOperation{ $0 + $1 }
+        case "−": performOperation{ $1 - $0 }
+        case "√": performOperation{ sqrt($0) }
             
-//            command / to comment stuff out
-//            case "÷":
-//            case "+":
-//            case "−":
         default: break //here we break out of the switch
         }
         
         
     }
+    
+    
+    //Function takes 2 doubles and returns a double
+    func performOperation(operation: (Double, Double) -> Double){
+        if operandStack.count >= 2 {
+            displayValue = operation(operandStack.removeLast(), operandStack.removeLast())
+            enter() //Automatic enter here too
+        }
+        
+    }
+    
+    func performOperation(operation: (Double) -> Double){
+        if operandStack.count >= 1 {
+            displayValue = operation(operandStack.removeLast())
+            enter() //Automatic enter here too
+        }
+        
+    }
+    
     
     
     @IBAction func enter() {
