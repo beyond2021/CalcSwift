@@ -8,19 +8,50 @@
 
 import Foundation
 class CalculatorBrain{
-   private enum Op{
+    private enum Op: Printable{
         case Operand(Double)
         case UnaryOperation(String, Double -> Double)
         case BinaryOperation(String, (Double,  Double) -> Double)
+    
+    
+    //Convert
+        var description: String{
+            get {
+                
+                switch self //Switch on myself
+                {
+                case .Operand(let operand):
+                    return "\(operand)"
+                case .UnaryOperation(let symbol, _):
+                    return symbol
+                case .BinaryOperation(let symbol, _):
+                    return symbol
+                    
+                }
+            }
+        }
     }
+    
+    
  private   var opStack = [Op]()
  private   var knownOps = [String:Op]()
     init(){
-        knownOps["×"] = Op.BinaryOperation("×", *  )
-        knownOps["÷"] = Op.BinaryOperation("÷") { $1 / $0 }
-        knownOps["+"] = Op.BinaryOperation("+", + )
-        knownOps["−"] = Op.BinaryOperation("−") { $1 - $0 }
-        knownOps["√"] = Op.UnaryOperation("√", sqrt)
+        func learnOp(op:Op){
+            
+            knownOps[op.description] = op
+        }
+        
+        learnOp(Op.BinaryOperation("×", *  ))
+        learnOp(Op.BinaryOperation("÷") { $1 / $0 })
+        learnOp(Op.BinaryOperation("+", + ))
+        learnOp(Op.BinaryOperation("−") { $1 - $0 })
+        learnOp(Op.UnaryOperation("√", sqrt))
+        
+//        knownOps["×"] = Op.BinaryOperation("×", *  )
+//        knownOps["÷"] = Op.BinaryOperation("÷") { $1 / $0 }
+//        knownOps["+"] = Op.BinaryOperation("+", + )
+//        knownOps["−"] = Op.BinaryOperation("−") { $1 - $0 }
+//        knownOps["√"] = Op.UnaryOperation("√", sqrt)
     }
     
     
@@ -65,7 +96,9 @@ class CalculatorBrain{
    
     func evaluate() -> Double?
     {
-        let(result, _) = evaluate(opStack)
+        let(result, remainder) = evaluate(opStack)
+        // lets print out the stack when we evaluate
+        println("\(opStack) = \(result) with \(remainder) left over")
         
         return result
     }
