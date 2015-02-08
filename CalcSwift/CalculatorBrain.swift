@@ -23,6 +23,8 @@ class CalculatorBrain{
         knownOps["√"] = Op.UnaryOperation("√", sqrt)
     }
     
+    
+    //Recursion
     private  func evaluate(ops: [Op]) -> (result:Double?, remainingOps:[Op]){
         
         
@@ -52,12 +54,8 @@ class CalculatorBrain{
                         
                     }
                     
-                    
                 }
-                
-                
             }
-            
         }
         
         return (nil, ops)
@@ -67,23 +65,25 @@ class CalculatorBrain{
    
     func evaluate() -> Double?
     {
-        let(result, remainder) = evaluate(opStack)
+        let(result, _) = evaluate(opStack)
         
-        return nil
+        return result
     }
     
     
-    func pushOperand(operand: Double){
+    func pushOperand(operand: Double) -> Double?{
         opStack.append(Op.Operand(operand))
+        return evaluate()
     }
     
     
-    func performOperation(symbol: String){
+    func performOperation(symbol: String)-> Double?{
         if  let operation = knownOps[symbol]{
             
             opStack.append(operation)
             
         }
+        return evaluate()
     }
     
     
